@@ -5,8 +5,6 @@ import { withStyles } from '../tools/withStyles';
 import { Secuence } from '../components/Secuence';
 import { Brand } from '../components/Brand';
 import { Menu } from '../components/Menu';
-import { SocialLinks } from '../components/SocialLinks';
-import { Legal } from '../components/Legal';
 
 const styles = theme => {
   return {
@@ -69,16 +67,7 @@ class Component extends React.Component {
               scheme='expand'
               onLinkStart={this.onLinkStart}
             />
-            <SocialLinks
-              className={classes.social}
-              onLinkStart={this.onLinkStart}
-            />
           </div>
-          <Legal
-            className={classes.legal}
-            opaque
-            onLinkStart={this.onLinkStart}
-          />
         </div>
       </Secuence>
     );

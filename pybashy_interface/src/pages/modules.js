@@ -44,7 +44,6 @@ const styles = theme => ({
 });
 
 class Module_list extends React.Component {
-// I dont know what this does yet, lulz
   static propTypes = {
     classes: PropTypes.object
   };
@@ -58,15 +57,15 @@ class Module_list extends React.Component {
           <h1><Text>Music</Text></h1>
           <div className={classes.module_list_item}>
             
-            <div className={Module_in_db}>
+            <div className={classes.Module_in_db}>
 
             </div>
             
-            <div className={classes.album}>
+            <div className={classes.Module_in_db}>
 
             </div>
 			      
-            <div className={classes.album}>
+            <div className={classes.Module_in_db}>
 
             </div>
           </div>
@@ -76,4 +75,4 @@ class Module_list extends React.Component {
   }
 }
 
-export default withStyles(styles)(Music);
+export default withStyles(styles)(Module_in_db);
