@@ -48,7 +48,7 @@ class TestApp extends React.Component {
       return (
           <Arwes animate background='/static/img/background.jpg' pattern='/static/img/glow.png'>
 
-            </Arwes>
+          </Arwes>
       );
   }
   onChange (ev) {
