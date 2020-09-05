@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { withStyles } from '../tools/withStyles';
-import { Main } from '../components/Main';
-import { Secuence } from '../components/Secuence';
-import { Text } from '../components/Text';
-import { Fader } from '../components/Fader';
-import { Link } from '../components/Link';
+import { withStyles } from './tools/withStyles';
+import { Main } from './components/Main';
+import { Secuence } from './components/Secuence';
+import { Text } from './components/Text';
+import { Fader } from './components/Fader';
+import { Link } from './components/Link';
 
 const styles = theme => ({
   root: {},
