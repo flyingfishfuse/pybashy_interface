@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+import TestApp from './App';
 import * as serviceWorker from './serviceWorker';
 
 <Arwes background='/static/img/background.jpg' pattern='/static/img/glow.png'

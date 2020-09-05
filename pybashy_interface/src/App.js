@@ -5,6 +5,47 @@ import './App.css';
 import { ThemeProvider, createTheme } from 'arwes';
 import { lighten, darken } from 'polished';
 import { SoundsProvider, createSounds } from 'arwes';
+import { withStyles } from '../tools/withStyles';
+import { Secuence } from '../components/Secuence';
+import { Brand } from '../components/Brand';
+import { Menu } from '../components/Menu';
+
+const styles = theme => {
+    return {
+      root: {
+        margin: 'auto',
+        width: '100%'
+      },
+      content: {
+        display: 'flex',
+        flexDirection: 'column',
+        margin: [0, 'auto'],
+        padding: 20
+      },
+      brand: {
+        margin: [0, 'auto', 30],
+        padding: [10, 0],
+        width: '100%',
+        maxWidth: 700
+      },
+      menu: {
+        margin: [0, 'auto', 20],
+        width: '100%',
+        maxWidth: 600
+      },
+      social: {
+        margin: [0, 'auto'],
+        width: '100%',
+        maxWidth: 400
+      },
+      legal: {
+        position: 'absolute',
+        left: '50%',
+        bottom: 0,
+        transform: 'translateX(-50%)'
+      }
+    };
+  };
 
 const Player = withSounds()(props => (
     <button
@@ -37,33 +78,38 @@ const MyColor = withStyles(theme => ({
   );
 
 class TestApp extends React.Component {
-  constructor () {
-      super(...arguments);
-      const color = '#22179a';
-      this.state = { color, theme: this.getTheme(color) };
-      this.onChange = this.onChange.bind(this);
+  onLinkStart = (event, { isInternal }) => {
+    if (isInternal) {
+      this.secuenceElement.exit();
+    }
   }
+  
   render () {
-      const { color, theme } = this.state;
-      return (
-          <Arwes animate background='/static/img/background.jpg' pattern='/static/img/glow.png'>
+    const { classes } = this.props;
 
-          </Arwes>
+    return (
+      <Secuence ref={ref => (this.secuenceElement = ref)}>
+        <div className={classes.root}>
+            <div className={classes.content}>
+              <Brand
+                className={classes.brand}
+                onLinkStart={this.onLinkStart}
+              />
+              <Menu
+                className={classes.menu}
+                animation={{ duration: { enter: 400 } }}
+                scheme='expand'
+                onLinkStart={this.onLinkStart}
+              />
+            </div>
+          </div>
+        </Secuence>
       );
+    }
   }
-  onChange (ev) {
-      const color = ev.target.value;
-      const theme = this.getTheme(color);
-      this.setState({ color, theme });
-  }
-  getTheme (color) {
-      return createTheme({
-          color: {
-              primary: { base: color }
-          }
-      });
-  }
-}
-
-
-export default TestApp;
+  
+  Component.propTypes = {
+    classes: PropTypes.any.isRequired
+  };
+  
+  export default withStyles(styles)(TestApp);
