@@ -8,7 +8,7 @@ import { lighten, darken } from 'polished';
 import { SoundsProvider, createSounds } from 'arwes';
 import { withStyles } from '../tools/withStyles';
 import { Secuence } from '../components/Secuence';
-import { Brand } from '../components/Brand';
+import { Brand } from '../components/OpeningAnimation';
 import { Menu } from '../components/Menu';
 
 const styles = theme => {
@@ -92,8 +92,8 @@ class TestApp extends React.Component {
       <Secuence ref={ref => (this.secuenceElement = ref)}>
         <div className={classes.root}>
             <div className={classes.content}>
-              <Brand
-                className={classes.brand}
+              <OpeningAnimation
+                className={classes.OpeningAnimation}
                 onLinkStart={this.onLinkStart}
               />
               <Menu

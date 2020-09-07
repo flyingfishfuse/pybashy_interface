@@ -6,7 +6,7 @@ import anime from 'animejs';
 import { Link } from '../Link';
 
 class Component extends React.Component {
-  static displayName = 'Brand';
+  static displayName = 'OpeningAnimation';
 
   static propTypes = {
     theme: PropTypes.object.isRequired,
@@ -61,12 +61,6 @@ class Component extends React.Component {
         onEnter && onEnter();
       }
     });
-  }
-
-  exit () {
-    const { energy, sounds, onExit } = this.props;
-    const paths = this.svgElement.querySelectorAll('path');
-
     sounds.fade.play();
 
     anime({
@@ -108,14 +102,7 @@ class Component extends React.Component {
 
     return (
       <h1 className={cx(classes.root, hover && classes.hover, className)} {...etc}>
-        <Link
-          className={classes.link}
-          href={link}
-          title='Soul Extract logo'
-          onLinkStart={onLinkStart}
-          onLinkEnd={onLinkEnd}
-        >
-          <span className={classes.title}>SoulExtract</span>
+          <span className={classes.title}>Test</span>
           <svg
             ref={ref => (this.svgElement = ref)}
             className={classes.svg}
@@ -135,7 +122,6 @@ class Component extends React.Component {
             <path className={classes.path} d='M1126,10 L1068,10 L1068,81 L1181,81' />
             <path className={classes.path} d='M1141,10 L1400,10 M1199,18 L1199,89' />
           </svg>
-        </Link>
       </h1>
     );
   }
