@@ -48,7 +48,7 @@ class Component extends React.PureComponent {
     this.contextDuration = null;
     this.state = {
       executedStatus: this.status,
-      energy: this.getEnergyState(this.status)
+      index: this.getStackLocation(this.status)
     };
   }
 
@@ -56,7 +56,7 @@ class Component extends React.PureComponent {
     const parentEnergy = this.context;
 
     if (parentEnergy && parentEnergy.subscribe) {
-      parentEnergy.subscribe(this, this.onEnergyChange);
+      parentEnergy.subscribe(this, this.onStackChange);
     }
 
     this.show = this.canShow();
@@ -77,10 +77,10 @@ class Component extends React.PureComponent {
   }
 
   componentDidUpdate () {
-    this.onEnergyChange();
+    this.onStackChange();
   }
 
-  onEnergyChange = () => {
+  onStackChange = () => {
     const { animate } = this.props;
     const show = this.canShow();
 
@@ -103,14 +103,14 @@ class Component extends React.PureComponent {
     }
 
     if (parentEnergy.subscribe) {
-      const energy = parentEnergy.getEnergy(this);
-      return energy.entering || energy.entered;
+      const index = parentEnergy.getEnergy(this);
+      return index.entering || index.entered;
     }
 
     return parentEnergy.status === ENTERED;
   }
 
-  getEnergyState (status) {
+  getStackLocation (status) {
     status = status || this.state.executedStatus;
 
     const { animate, independent } = this.props;
@@ -134,7 +134,7 @@ class Component extends React.PureComponent {
     if (this.state.executedStatus !== status) {
       this.setState(() => ({
         executedStatus: status,
-        energy: this.getEnergyState(status)
+        index: this.getStackLocation(status)
       }), () => {
         if (this.props.onUpdate) {
           this.props.onUpdate(status);
@@ -220,11 +220,11 @@ class Component extends React.PureComponent {
   }
 
   render () {
-    const { energy } = this.state;
+    const { index } = this.state;
     const { children } = this.props;
 
     return (
-      <AnimationContext.Provider value={energy}>
+      <AnimationContext.Provider value={index}>
         {children}
       </AnimationContext.Provider>
     );

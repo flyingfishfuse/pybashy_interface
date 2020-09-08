@@ -6,7 +6,7 @@ import { ENTERING, ENTERED, EXITING, EXITED } from '../../tools/animationStatus'
 import { AnimationContext } from '../AnimationContext';
 
 class Component extends React.PureComponent {
-  static displayName = 'Secuence';
+  static displayName = 'Sequence';
 
   static propTypes = {
     theme: PropTypes.object.isRequired,
@@ -29,7 +29,7 @@ class Component extends React.PureComponent {
       getEnergy: this.getEnergy
     };
 
-    this.subscribers = [];
+    this.actionStack = [];
     this.timeouts = {};
   }
 
@@ -58,20 +58,20 @@ class Component extends React.PureComponent {
       throw new Error('Subscriber needs valid Animation component and callback.');
     }
 
-    const createdSubscription = this.subscribers.find(sub => sub && sub.ref === ref);
+    const createdSubscription = this.actionStack.find(sub => sub && sub.ref === ref);
 
     if (createdSubscription) {
       return;
     }
 
-    const energy = ref.getEnergyState(ref.status);
-    const newSubscription = { ref, callback, energy };
+    const index = ref.getStackLocation(ref.status);
+    const newSubscription = { ref, callback, index };
 
-    this.subscribers = [...this.subscribers, newSubscription];
+    this.actionStack = [...this.actionStack, newSubscription];
   }
 
   unsubscribe = ref => {
-    this.subscribers = this.subscribers.map(sub => {
+    this.actionStack = this.actionStack.map(sub => {
       if (sub && sub.ref === ref) {
         return null;
       }
@@ -80,10 +80,10 @@ class Component extends React.PureComponent {
   }
 
   getEnergy = ref => {
-    const createdSubscription = this.subscribers.find(sub => sub && sub.ref === ref);
+    const createdSubscription = this.actionStack.find(sub => sub && sub.ref === ref);
 
     if (createdSubscription) {
-      return createdSubscription.energy;
+      return createdSubscription.index;
     }
 
     return null;
@@ -94,14 +94,14 @@ class Component extends React.PureComponent {
 
     let lastTime = 0;
 
-    this.subscribers.forEach((subscriber, index) => {
+    this.actionStack.forEach((subscriber, index) => {
       if (!subscriber) {
         return;
       }
 
-      subscriber.energy = subscriber.ref.getEnergyState(subscriber.ref.status);
+      subscriber.index = subscriber.ref.getStackLocation(subscriber.ref.status);
 
-      const duration = subscriber.energy.duration.enter;
+      const duration = subscriber.index.duration.enter;
 
       let startTime;
 
@@ -127,7 +127,7 @@ class Component extends React.PureComponent {
   exit () {
     const duration = this.props.theme.animation.time;
 
-    this.subscribers.forEach((subscriber, index) => {
+    this.actionStack.forEach((subscriber, index) => {
       this.updateSubscriber(subscriber, EXITING);
 
       this.schedule(index, duration, () => {
@@ -137,8 +137,8 @@ class Component extends React.PureComponent {
   }
 
   updateSubscriber (subscriber, status) {
-    subscriber.energy = subscriber.ref.getEnergyState(status);
-    subscriber.callback(subscriber.energy);
+    subscriber.index = subscriber.ref.getStackLocation(status);
+    subscriber.callback(subscriber.index);
   }
 
   schedule (key, time, callback) {

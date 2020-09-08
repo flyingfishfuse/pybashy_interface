@@ -7,10 +7,11 @@ import { ThemeProvider, createTheme } from 'arwes';
 import { lighten, darken } from 'polished';
 import { SoundsProvider, createSounds } from 'arwes';
 import { withStyles } from '../tools/withStyles';
-import { Secuence } from '../components/Secuence';
+import { Sequence } from '../components/Sequence';
 import { Brand } from '../components/OpeningAnimation';
 import { Menu } from '../components/Menu';
 
+const electron = require('electron')
 const styles = theme => {
     return {
       root: {
@@ -64,7 +65,6 @@ function createWindow () {
   win.loadFile('index.html')
 }
 
-app.whenReady().then(createWindow)
 const Player = withSounds()(props => (
     <button
         style={{ margin: 10 }}
@@ -95,10 +95,11 @@ const MyColor = withStyles(theme => ({
     )
   );
 
+
 class TestApp extends React.Component {
   onLinkStart = (event, { isInternal }) => {
     if (isInternal) {
-      this.secuenceElement.exit();
+      this.sequenceElement.exit();
     }
   }
   
@@ -106,7 +107,7 @@ class TestApp extends React.Component {
     const { classes } = this.props;
 
     return (
-      <Secuence ref={ref => (this.secuenceElement = ref)}>
+      <Sequence ref={ref => (this.sequenceElement = ref)}>
         <div className={classes.root}>
             <div className={classes.content}>
               <OpeningAnimation
@@ -121,7 +122,7 @@ class TestApp extends React.Component {
               />
             </div>
           </div>
-        </Secuence>
+        </Sequence>
       );
     }
   }
@@ -129,5 +130,6 @@ class TestApp extends React.Component {
   Component.propTypes = {
     classes: PropTypes.any.isRequired
   };
-  
+
+
   export default withStyles(styles)(TestApp);

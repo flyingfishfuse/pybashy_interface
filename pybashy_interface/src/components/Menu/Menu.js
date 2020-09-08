@@ -6,7 +6,7 @@ import anime from 'animejs';
 import { getViewportRange } from '../../tools/viewport';
 import { Link } from '../Link';
 import { Text } from '../Text';
-import { Secuence } from '../Secuence';
+import { Sequence } from '../Sequence';
 import { SCHEME_NORMAL, SCHEME_EXPAND } from './Menu.constants';
 
 class Component extends React.PureComponent {
@@ -15,7 +15,7 @@ class Component extends React.PureComponent {
   static propTypes = {
     theme: PropTypes.object.isRequired,
     classes: PropTypes.object.isRequired,
-    energy: PropTypes.object.isRequired,
+    index: PropTypes.object.isRequired,
     audio: PropTypes.object.isRequired,
     sounds: PropTypes.object.isRequired,
     className: PropTypes.any,
@@ -34,7 +34,7 @@ class Component extends React.PureComponent {
     super(...arguments);
 
     this.state = {
-      showSecuence: false
+      showSequence: false
     };
   }
 
@@ -43,13 +43,13 @@ class Component extends React.PureComponent {
   }
 
   componentDidUpdate (prevProps) {
-    const { energy } = this.props;
+    const { index } = this.props;
 
-    if (prevProps.energy.status !== energy.status) {
-      if (energy.entering) {
-        this.setState({ showSecuence: true }); // eslint-disable-line react/no-did-update-set-state
-      } else if (energy.exiting) {
-        this.setState({ showSecuence: false }); // eslint-disable-line react/no-did-update-set-state
+    if (prevProps.index.status !== index.status) {
+      if (index.entering) {
+        this.setState({ showSequence: true }); // eslint-disable-line react/no-did-update-set-state
+      } else if (index.exiting) {
+        this.setState({ showSequence: false }); // eslint-disable-line react/no-did-update-set-state
       }
     }
   }
@@ -76,8 +76,8 @@ class Component extends React.PureComponent {
   }
 
   animateNormalEnter () {
-    const { energy, onEnter } = this.props;
-    const { duration } = energy;
+    const { index, onEnter } = this.props;
+    const { duration } = index;
 
     const divisors = this.element.querySelectorAll('b');
     const links = this.element.querySelectorAll('a');
@@ -95,8 +95,8 @@ class Component extends React.PureComponent {
   }
 
   animateExpandEnter () {
-    const { energy, sounds, onEnter } = this.props;
-    const { duration } = energy;
+    const { index, sounds, onEnter } = this.props;
+    const { duration } = index;
     const viewportRange = getViewportRange();
 
     const divisors = this.element.querySelectorAll('b');
@@ -133,8 +133,8 @@ class Component extends React.PureComponent {
   }
 
   exit () {
-    const { energy, onExit } = this.props;
-    const { duration } = energy;
+    const { index, onExit } = this.props;
+    const { duration } = index;
 
     const divisors = this.element.querySelectorAll('b');
     const links = this.element.querySelectorAll('a');
@@ -158,7 +158,7 @@ class Component extends React.PureComponent {
     const {
       theme,
       classes,
-      energy,
+      index,
       audio,
       sounds,
       className,
@@ -169,7 +169,7 @@ class Component extends React.PureComponent {
       onLinkEnd,
       ...etc
     } = this.props;
-    const { showSecuence } = this.state;
+    const { showSequence } = this.state;
 
     const animateText = scheme === SCHEME_NORMAL;
     const linkProps = {
@@ -180,8 +180,8 @@ class Component extends React.PureComponent {
     };
 
     return (
-      <Secuence
-        animation={{ show: showSecuence, independent: true }}
+      <Sequence
+        animation={{ show: showSequence, independent: true }}
         stagger
       >
         <nav
@@ -225,7 +225,7 @@ class Component extends React.PureComponent {
             </Text>
           </Link>
         </nav>
-      </Secuence>
+      </Sequence>
     );
   }
 }
