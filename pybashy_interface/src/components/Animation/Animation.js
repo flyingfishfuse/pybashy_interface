@@ -53,10 +53,10 @@ class Component extends React.PureComponent {
   }
 
   componentDidMount () {
-    const parentEnergy = this.context;
+    const parentIndex = this.context;
 
-    if (parentEnergy && parentEnergy.subscribe) {
-      parentEnergy.subscribe(this, this.onStackChange);
+    if (parentIndex && parentIndex.subscribe) {
+      parentIndex.subscribe(this, this.onStackChange);
     }
 
     this.show = this.canShow();
@@ -69,10 +69,10 @@ class Component extends React.PureComponent {
   componentWillUnmount () {
     this.unschedule();
 
-    const parentEnergy = this.context;
+    const parentIndex = this.context;
 
-    if (parentEnergy && parentEnergy.subscribe) {
-      parentEnergy.unsubscribe(this);
+    if (parentIndex && parentIndex.subscribe) {
+      parentIndex.unsubscribe(this);
     }
   }
 
@@ -95,19 +95,19 @@ class Component extends React.PureComponent {
   }
 
   canShow () {
-    const parentEnergy = this.context;
+    const parentIndex = this.context;
     const { independent } = this.props;
 
-    if (independent || !parentEnergy) {
+    if (independent || !parentIndex) {
       return this.props.show;
     }
 
-    if (parentEnergy.subscribe) {
-      const index = parentEnergy.getEnergy(this);
+    if (parentIndex.subscribe) {
+      const index = parentIndex.getEnergy(this);
       return index.entering || index.entered;
     }
 
-    return parentEnergy.status === ENTERED;
+    return parentIndex.status === ENTERED;
   }
 
   getStackLocation (status) {
