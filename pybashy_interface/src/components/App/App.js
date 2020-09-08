@@ -1,6 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import cx from 'classnames';
+import ReactDOM from 'react-dom';
+import logo from './logo.svg';
+import './App.css';
+import { ThemeProvider, createTheme } from 'arwes';
+import { lighten, darken } from 'polished';
+import { SoundsProvider, createSounds } from 'arwes';
+import { withStyles } from '../tools/withStyles';
+import { Sequence } from '../components/Sequence';
+import { Brand } from '../components/OpeningAnimation';
+import { Menu } from '../components/Menu';
 
 import { Header } from '../Header';
 import { Footer } from '../Footer';

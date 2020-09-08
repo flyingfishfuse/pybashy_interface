@@ -11,7 +11,14 @@ import { Sequence } from '../components/Sequence';
 import { Brand } from '../components/OpeningAnimation';
 import { Menu } from '../components/Menu';
 
+import { Header } from '../Header';
+import { Footer } from '../Footer';
+import { AppContent } from '../AppContent';
+
 const electron = require('electron')
+
+// this is the main theme?
+
 const styles = theme => {
     return {
       root: {
@@ -49,8 +56,39 @@ const styles = theme => {
     };
   };
 
+const styles = theme => ({
+  root: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    top: 0,
+    bottom: 0,
+    display: 'flex',
+    flexDirection: 'column'
+  },
+  content: {
+    flex: 1,
+    display: 'flex',
+    flexDirection: 'column',
+    overflowX: 'hidden',
+    overflowY: 'auto',
+    width: '100%'
+  },
+
+  '@media (min-width: 768px)': {
+    content: {
+      overflow: 'hidden'
+    }
+  }
+});
+
+export { styles };
+
+
 const { app, BrowserWindow } = require('electron')
 
+
+// stuff for electron 
 function createWindow () {
   // Create the browser window.
   const win = new BrowserWindow({
@@ -65,6 +103,8 @@ function createWindow () {
   win.loadFile('index.html')
 }
 
+// this is the sound player
+// move this to small_components file/folder
 const Player = withSounds()(props => (
     <button
         style={{ margin: 10 }}
@@ -74,6 +114,30 @@ const Player = withSounds()(props => (
     </button>
 ));
 
+// This method will be called when Electron has finished
+// initialization and is ready to create browser windows.
+// Some APIs can only be used after this event occurs.
+app.whenReady().then(createWindow)
+
+
+// Quit when all windows are closed, except on macOS. There, it's common
+// for applications and their menu bar to stay active until the user quits
+// explicitly with Cmd + Q.
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') {
+    app.quit()
+  }
+})
+
+app.on('activate', () => {
+  // On macOS it's common to re-create a window in the app when the
+  // dock icon is clicked and there are no other windows open.
+  if (BrowserWindow.getAllWindows().length === 0) {
+    createWindow()
+  }
+})
+// these are the sounds the sound player uses
+// move this to config file
 const sounds = {
     shared: { volume: 1 },
     players: {
@@ -94,8 +158,72 @@ const MyColor = withStyles(theme => ({
     <div className={props.classes.root} />
     )
   );
+  class Component extends React.Component {
+    static displayName = 'Header';
+  
+    static propTypes = {
+      theme: PropTypes.object.isRequired,
+      classes: PropTypes.object.isRequired,
+      className: PropTypes.any,
+      children: PropTypes.any
+    };
+  
+    componentDidMount () {
+      window.addEventListener('route-change-start', this.onRouteChangeStart);
+      window.addEventListener('route-change', this.onRouteChange);
+    }
+  
+    componentWillUnmount () {
+      window.removeEventListener('route-change-start', this.onRouteChangeStart);
+      window.removeEventListener('route-change', this.onRouteChange);
+    }
+  
+    onRouteChangeStart = ({ detail: { isInternal, href } }) => {
+      if (isInternal && href === '/') {
+        this.header.exit();
+        this.footer.exit();
+      }
+    }
+  
+    onRouteChange = () => {
+      this.contentElement.scrollTo(0, 0);
+    }
+  
+    render () {
+      const {
+        theme,
+        classes,
+        className,
+        children,
+        ...etc
+      } = this.props;
+  
+      return (
+        <div className={cx(classes.root, className)} {...etc}>
+          <Header
+            className={classes.header}
+            ref={ref => (this.header = ref)}
+          />
+          <div
+            className={classes.content}
+            ref={ref => (this.contentElement = ref)}
+          >
+            <AppContent>
+              {children}
+            </AppContent>
+            <Footer
+              className={classes.footer}
+              ref={ref => (this.footer = ref)}
+            />
+          </div>
+        </div>
+      );
+    }
+  }
 
+  export { Component };
 
+  // this is the menu system inside the main page
 class TestApp extends React.Component {
   onLinkStart = (event, { isInternal }) => {
     if (isInternal) {
